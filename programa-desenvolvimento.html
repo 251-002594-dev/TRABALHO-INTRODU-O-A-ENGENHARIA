@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano 30 Dias — Desenvolvimento Pessoal</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde: #2D6A4F;
+    --verde-light: #52B788;
+    --verde-pale: #D8F3DC;
+    --amarelo: #F4A261;
+    --azul: #457B9D;
+    --bg: #F8F5F0;
+    --card: #FFFFFF;
+    --texto: #1B1B1B;
+    --muted: #7A7A6E;
+    --border: #E2DDD5;
+    --saude: #E76F51;
+    --estudos: #457B9D;
+    --financas: #2D6A4F;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--texto);
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--verde);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(45,106,79,0.2);
+  }
+  nav .logo {
+    font-family: 'Fraunces', serif;
+    font-size: 1.3rem;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
+  .nav-tabs { display: flex; gap: 0; }
+  .nav-tab {
+    background: none; border: none; cursor: pointer;
+    color: rgba(255,255,255,0.65);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0 1.2rem;
+    height: 60px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .nav-tab:hover { color: #fff; }
+  .nav-tab.active { color: #fff; border-bottom-color: var(--verde-light); }
+
+  /* PÁGINAS */
+  .page { display: none; padding: 2rem; max-width: 860px; margin: 0 auto; }
+  .page.active { display: block; animation: fadeIn 0.35s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* CABEÇALHOS */
+  .page-title {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--verde);
+    margin-bottom: 0.3rem;
+    line-height: 1.1;
+  }
+  .page-sub {
+    color: var(--muted);
+    font-size: 0.92rem;
+    margin-bottom: 2rem;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .dot-saude { background: var(--saude); }
+  .dot-estudos { background: var(--estudos); }
+  .dot-financas { background: var(--financas); }
+
+  /* FORMULÁRIO */
+  label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.4rem;
+    margin-top: 1rem;
+  }
+  label:first-child { margin-top: 0; }
+  input[type="text"], input[type="number"], textarea, select {
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    background: var(--bg);
+    color: var(--texto);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--verde-light); background: #fff; }
+  textarea { resize: vertical; min-height: 80px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.7rem 1.4rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.18s;
+  }
+  .btn-primary { background: var(--verde); color: #fff; }
+  .btn-primary:hover { background: #1e4d38; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(45,106,79,0.3); }
+  .btn-outline { background: transparent; color: var(--verde); border: 1.5px solid var(--verde); }
+  .btn-outline:hover { background: var(--verde-pale); }
+  .btn-danger { background: #fee2e2; color: #b91c1c; }
+  .btn-danger:hover { background: #fca5a5; }
+  .btn-sm { padding: 0.4rem 0.9rem; font-size: 0.82rem; }
+
+  /* DIAGNÓSTICO — SLIDERS */
+  .slider-group { margin-bottom: 1.2rem; }
+  .slider-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+  .slider-label span:first-child { font-size: 0.9rem; font-weight: 500; }
+  .slider-value {
+    font-family: 'Fraunces', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--verde);
+    min-width: 2rem;
+    text-align: right;
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    outline: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--verde);
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(45,106,79,0.4);
+  }
+
+  /* METAS */
+  .meta-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 0.9rem;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 0.7rem;
+    background: var(--bg);
+    transition: border-color 0.2s;
+  }
+  .meta-item:hover { border-color: var(--verde-light); }
+  .meta-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+  .meta-info { flex: 1; }
+  .meta-titulo { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.2rem; }
+  .meta-detalhe { font-size: 0.82rem; color: var(--muted); }
+  .meta-badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .badge-saude { background: #fee4dc; color: #c0440e; }
+  .badge-estudos { background: #dbeafe; color: #1e40af; }
+  .badge-financas { background: var(--verde-pale); color: var(--verde); }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 560px) { .form-row { grid-template-columns: 1fr; } }
+
+  /* CHECKLIST */
+  .semana-header {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--verde);
+    margin: 1.5rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--verde-pale);
+  }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.65rem 0.9rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-bottom: 0.3rem;
+    border: 1.5px solid transparent;
+  }
+  .check-item:hover { background: var(--verde-pale); border-color: var(--verde-light); }
+  .check-item.done { background: #f0fdf4; }
+  .check-item.done .check-texto { text-decoration: line-through; color: var(--muted); }
+  .check-box {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: all 0.15s;
+  }
+  .check-item.done .check-box { background: var(--verde); border-color: var(--verde); color: #fff; }
+  .check-texto { font-size: 0.9rem; flex: 1; }
+  .check-pilar {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* PROGRESSO */
+  .progress-wrap { margin: 0.5rem 0 1rem; }
+  .progress-bar-bg {
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--verde-light), var(--verde));
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+
+  /* STATS */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.2rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .stat-num {
+    font-family: 'Fraunces', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--verde);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .stat-label { font-size: 0.78rem; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  @media (max-width: 560px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 2rem; right: 2rem;
+    background: var(--verde);
+    color: #fff;
+    padding: 0.75rem 1.3rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 8px 24px rgba(45,106,79,0.35);
+    z-index: 999;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.35s cubic-bezier(.4,0,.2,1);
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--verde) 0%, #1a3a2b 100%);
+    border-radius: 20px;
+    padding: 2.2rem;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '🌱';
+    position: absolute;
+    right: 1.5rem; top: 50%;
+    transform: translateY(-50%);
+    font-size: 5rem;
+    opacity: 0.15;
+  }
+  .hero h2 { font-family: 'Fraunces', serif; font-size: 1.6rem; margin-bottom: 0.4rem; font-weight: 700; }
+  .hero p { opacity: 0.8; font-size: 0.92rem; line-height: 1.6; max-width: 540px; }
+
+  /* EMPTY STATE */
+  .empty { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+  .empty-icon { font-size: 3rem; margin-bottom: 0.8rem; }
+  .empty p { font-size: 0.92rem; line-height: 1.6; }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">🌿 30 Dias</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('inicio')">Início</button>
+    <button class="nav-tab" onclick="showPage('diagnostico')">Diagnóstico</button>
+    <button class="nav-tab" onclick="showPage('metas')">Metas</button>
+    <button class="nav-tab" onclick="showPage('checklist')">Checklist</button>
+    <button class="nav-tab" onclick="showPage('progresso')">Progresso</button>
+  </div>
+</nav>
+
+<!-- ==================== INÍCIO ==================== -->
+<div class="page active" id="page-inicio">
+  <div class="hero">
+    <h2>Programa de Desenvolvimento Pessoal</h2>
+    <p>30 dias para criar hábitos reais em saúde, estudos e finanças. Faça seu diagnóstico, defina metas e acompanhe seu progresso diariamente.</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num" id="stat-metas">0</div>
+      <div class="stat-label">Metas criadas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-checks">0</div>
+      <div class="stat-label">Tarefas feitas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-pct">0%</div>
+      <div class="stat-label">Progresso geral</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 Como usar o programa</div>
+    <div class="slider-group">
+      <div style="display:flex;gap:0.6rem;align-items:flex-start;margin-bottom:0.7rem;">
+        <span style="background:var(--verde);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;flex-shrink:0;">1</span>
+        <div><strong>Diagnóstico</strong><br><span style="font-size:0.85rem;color:var(--muted);">Avalie seu nível atual em cada área (0 a 10)</span></div>
+      </div>
+      <div style="display:flex;gap:0.6rem;align-items:flex-start;margin-bottom:0.7rem;">
+        <span style="background:var(--amarelo);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;flex-shrink:0;">2</span>
+        <div><strong>Defina suas Metas</strong><br><span style="font-size:0.85rem;color:var(--muted);">Crie metas SMART para cada pilar do programa</span></div>
+      </div>
+      <div style="display:flex;gap:0.6rem;align-items:flex-start;margin-bottom:0.7rem;">
+        <span style="background:var(--azul);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;flex-shrink:0;">3</span>
+        <div><strong>Checklist Diário</strong><br><span style="font-size:0.85rem;color:var(--muted);">Marque as tarefas concluídas a cada semana</span></div>
+      </div>
+      <div style="display:flex;gap:0.6rem;align-items:flex-start;">
+        <span style="background:var(--verde-light);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;flex-shrink:0;">4</span>
+        <div><strong>Acompanhe o Progresso</strong><br><span style="font-size:0.85rem;color:var(--muted);">Veja seu desempenho por área e semana</span></div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" onclick="showPage('diagnostico')" style="width:100%;justify-content:center;padding:1rem;">
+    Começar agora →
+  </button>
+</div>
+
+<!-- ==================== DIAGNÓSTICO ==================== -->
+<div class="page" id="page-diagnostico">
+  <div class="page-title">Diagnóstico Inicial</div>
+  <div class="page-sub">Avalie seu estado atual em cada área de 0 (muito ruim) a 10 (excelente)</div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot dot-saude"></span> Saúde & Bem-estar</div>
+    <div class="slider-group">
+      <div class="slider-label"><span>Qualidade do sono</span><span class="slider-value" id="val-sono">5</span></div>
+      <input type="range" min="0" max="10" value="5" oninput="updateSlider('sono', this.value)">
+    </div>
+    <div class="slider-group">
+      <div class="slider-label"><span>Prática de exercícios</span><span class="slider-value" id="val-exercicio">5</span></div>
+      <input type="range" min="0" max="10" value="5" oninput="updateSlider('exercicio', this.value)">
+    </div>
+    <div class="slider-group">
+      <div class="slider-label"><span>Alimentação saudável</span><span class="slider-value" id="val-alimentacao">5</span></div>
+      <input type="range" min="0" max="10" value="5" oninput="updateSlider('alimentacao', this.value)">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot dot-estudos"></span> Estudos & Produtividade</div>
+    <div class="slider-group">
+      <div class="slider-label"><span>Rotina de estudos</span><span class="slider-value" id="val-rotina">5</span></div>
+      <input type="range" min="0" max="10" value="5" oninput="updateSlider('rotina', this.value)">
+    </div>
+    <div class="slider-group">
+      <div class="slider-label"><span>Foco e concentração</span><span class="slider-value" id="val-foco">5</span></div>
+      <input type="range" min="0" max="10" value="5" oninput="updateSlider('foco', this.value)">
+    </div>
+    <div class="slider-group">
+      <div class="slider-label"><span>Organização de tarefas</span><span class="slider-value" id="val-organizacao">5</span></div>
+      <input type="range" min="0" max="10" value="5" oninput="updateSlider('organizacao', this.value)">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot dot-financas"></span> Finanças</div>
+    <div class="slider-group">
+      <div class="slider-label"><span>Controle de gastos</span><span class="slider-value" id="val-gastos">5</span></div>
+      <input type="range" min="0" max="10" value="5" oninput="updateSlider('gastos', this.value)">
+    </div>
+    <div class="slider-group">
+      <div class="slider-label"><span>Hábito de poupar</span><span class="slider-value" id="val-poupança">5</span></div>
+      <input type="range" min="0" max="10" value="5" oninput="updateSlider('poupança', this.value)">
+    </div>
+    <div class="slider-group">
+      <div class="slider-label"><span>Planejamento financeiro</span><span class="slider-value" id="val-planejamento">5</span></div>
+      <input type="range" min="0" max="10" value="5" oninput="updateSlider('planejamento', this.value)">
+    </div>
+  </div>
+
+  <div class="card">
+    <label>O que mais quer melhorar nestes 30 dias?</label>
+    <textarea id="obs-diagnostico" placeholder="Ex: Quero criar uma rotina de estudos consistente e parar de gastar por impulso..."></textarea>
+  </div>
+
+  <button class="btn btn-primary" onclick="salvarDiagnostico()" style="width:100%;justify-content:center;padding:1rem;">
+    Salvar diagnóstico →
+  </button>
+</div>
+
+<!-- ==================== METAS ==================== -->
+<div class="page" id="page-metas">
+  <div class="page-title">Minhas Metas</div>
+  <div class="page-sub">Crie metas SMART para os 30 dias — específicas e com prazo definido</div>
+
+  <div class="card">
+    <div class="card-title">+ Nova Meta</div>
+    <div class="form-row">
+      <div>
+        <label>Pilar</label>
+        <select id="meta-pilar">
+          <option value="saude">💪 Saúde</option>
+          <option value="estudos">📚 Estudos</option>
+          <option value="financas">💰 Finanças</option>
+        </select>
+      </div>
+      <div>
+        <label>Semana alvo</label>
+        <select id="meta-semana">
+          <option value="1">Semana 1</option>
+          <option value="2">Semana 2</option>
+          <option value="3">Semana 3</option>
+          <option value="4">Semana 4</option>
+        </select>
+      </div>
+    </div>
+    <label>Meta (seja específico!)</label>
+    <input type="text" id="meta-titulo" placeholder="Ex: Caminhar 30 min por dia, 5x por semana">
+    <label>Como vou medir o resultado?</label>
+    <input type="text" id="meta-medida" placeholder="Ex: Registrar no checklist diário">
+    <div style="margin-top:1.2rem;">
+      <button class="btn btn-primary" onclick="adicionarMeta()">Adicionar meta</button>
+    </div>
+  </div>
+
+  <div id="lista-metas">
+    <div class="empty">
+      <div class="empty-icon">🎯</div>
+      <p>Nenhuma meta criada ainda.<br>Adicione sua primeira meta acima!</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== CHECKLIST ==================== -->
+<div class="page" id="page-checklist">
+  <div class="page-title">Checklist Diário</div>
+  <div class="page-sub">Marque as tarefas que você completou em cada semana</div>
+
+  <div class="card" style="padding:1rem 1.5rem;">
+    <div class="progress-label">
+      <span>Progresso geral do programa</span>
+      <span id="pct-label-check">0%</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="prog-bar-check" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div id="checklist-container"></div>
+</div>
+
+<!-- ==================== PROGRESSO ==================== -->
+<div class="page" id="page-progresso">
+  <div class="page-title">Meu Progresso</div>
+  <div class="page-sub">Acompanhe sua evolução durante os 30 dias</div>
+
+  <div class="stats-grid">
+    <div class="stat-card" style="border-top:3px solid var(--saude);">
+      <div class="stat-num" id="pct-saude">—</div>
+      <div class="stat-label">💪 Saúde</div>
+    </div>
+    <div class="stat-card" style="border-top:3px solid var(--estudos);">
+      <div class="stat-num" id="pct-estudos">—</div>
+      <div class="stat-label">📚 Estudos</div>
+    </div>
+    <div class="stat-card" style="border-top:3px solid var(--financas);">
+      <div class="stat-num" id="pct-financas">—</div>
+      <div class="stat-label">💰 Finanças</div>
+    </div>
+  </div>
+
+  <div class="card" id="card-diagnostico-resumo" style="display:none;">
+    <div class="card-title">📊 Resultado do Diagnóstico Inicial</div>
+    <div id="diagnostico-resumo-content"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📈 Progresso por Semana</div>
+    <div id="progresso-semanas"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">✅ Resumo das Metas</div>
+    <div id="resumo-metas"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ========= STATE =========
+  let state = {
+    diagnostico: {},
+    metas: [],
+    checks: {},
+    checksDefault: [
+      // semana 1
+      { id: 'c1', semana: 1, pilar: 'saude', texto: 'Dormir pelo menos 7h' },
+      { id: 'c2', semana: 1, pilar: 'saude', texto: 'Fazer 15 min de atividade física' },
+      { id: 'c3', semana: 1, pilar: 'estudos', texto: 'Estudar 30 min sem distrações' },
+      { id: 'c4', semana: 1, pilar: 'estudos', texto: 'Organizar tarefas do dia' },
+      { id: 'c5', semana: 1, pilar: 'financas', texto: 'Anotar todos os gastos do dia' },
+      // semana 2
+      { id: 'c6', semana: 2, pilar: 'saude', texto: 'Beber 2L de água' },
+      { id: 'c7', semana: 2, pilar: 'saude', texto: 'Fazer 30 min de atividade física' },
+      { id: 'c8', semana: 2, pilar: 'estudos', texto: 'Estudar 1h com método Pomodoro' },
+      { id: 'c9', semana: 2, pilar: 'estudos', texto: 'Revisar conteúdo da semana anterior' },
+      { id: 'c10', semana: 2, pilar: 'financas', texto: 'Identificar um gasto desnecessário' },
+      // semana 3
+      { id: 'c11', semana: 3, pilar: 'saude', texto: 'Comer pelo menos 1 fruta ou verdura' },
+      { id: 'c12', semana: 3, pilar: 'saude', texto: 'Fazer exercício 4x na semana' },
+      { id: 'c13', semana: 3, pilar: 'estudos', texto: 'Estudar 1h30 e fazer resumo' },
+      { id: 'c14', semana: 3, pilar: 'estudos', texto: 'Ler 10 páginas de livro ou artigo' },
+      { id: 'c15', semana: 3, pilar: 'financas', texto: 'Comparar preços antes de comprar algo' },
+      // semana 4
+      { id: 'c16', semana: 4, pilar: 'saude', texto: 'Manter rotina de sono consistente' },
+      { id: 'c17', semana: 4, pilar: 'saude', texto: 'Fazer exercício 5x na semana' },
+      { id: 'c18', semana: 4, pilar: 'estudos', texto: 'Estudar 2h e revisar todas as metas' },
+      { id: 'c19', semana: 4, pilar: 'estudos', texto: 'Preparar plano para o próximo mês' },
+      { id: 'c20', semana: 4, pilar: 'financas', texto: 'Fechar balanço financeiro do mês' },
+    ]
+  };
+
+  // Carregar do localStorage
+  try {
+    const saved = localStorage.getItem('prog30dias');
+    if (saved) { const s = JSON.parse(saved); Object.assign(state, s); }
+  } catch(e) {}
+
+  function save() {
+    try { localStorage.setItem('prog30dias', JSON.stringify(state)); } catch(e) {}
+  }
+
+  // ========= NAVEGAÇÃO =========
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    const tabs = document.querySelectorAll('.nav-tab');
+    const names = ['inicio','diagnostico','metas','checklist','progresso'];
+    tabs[names.indexOf(id)].classList.add('active');
+    if (id === 'checklist') renderChecklist();
+    if (id === 'progresso') renderProgresso();
+    if (id === 'inicio') updateStats();
+  }
+
+  // ========= TOAST =========
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // ========= SLIDERS =========
+  function updateSlider(id, val) {
+    document.getElementById('val-' + id).textContent = val;
+  }
+
+  // ========= DIAGNÓSTICO =========
+  function salvarDiagnostico() {
+    const campos = ['sono','exercicio','alimentacao','rotina','foco','organizacao','gastos','poupança','planejamento'];
+    campos.forEach(c => {
+      const el = document.querySelector(`input[oninput="updateSlider('${c}', this.value)"]`);
+      if (el) state.diagnostico[c] = parseInt(el.value);
+    });
+    state.diagnostico.obs = document.getElementById('obs-diagnostico').value;
+    save();
+    toast('✅ Diagnóstico salvo com sucesso!');
+    setTimeout(() => showPage('metas'), 800);
+  }
+
+  // ========= METAS =========
+  const pilarInfo = {
+    saude: { icon: '💪', label: 'Saúde', badge: 'badge-saude' },
+    estudos: { icon: '📚', label: 'Estudos', badge: 'badge-estudos' },
+    financas: { icon: '💰', label: 'Finanças', badge: 'badge-financas' },
+  };
+
+  function adicionarMeta() {
+    const titulo = document.getElementById('meta-titulo').value.trim();
+    const medida = document.getElementById('meta-medida').value.trim();
+    const pilar = document.getElementById('meta-pilar').value;
+    const semana = document.getElementById('meta-semana').value;
+    if (!titulo) { toast('⚠️ Escreva sua meta antes de adicionar!'); return; }
+    state.metas.push({ id: Date.now(), titulo, medida, pilar, semana: parseInt(semana) });
+    save();
+    document.getElementById('meta-titulo').value = '';
+    document.getElementById('meta-medida').value = '';
+    renderMetas();
+    updateStats();
+    toast('🎯 Meta adicionada!');
+  }
+
+  function removerMeta(id) {
+    state.metas = state.metas.filter(m => m.id !== id);
+    save();
+    renderMetas();
+    updateStats();
+    toast('Meta removida');
+  }
+
+  function renderMetas() {
+    const el = document.getElementById('lista-metas');
+    if (!state.metas.length) {
+      el.innerHTML = `<div class="empty"><div class="empty-icon">🎯</div><p>Nenhuma meta criada ainda.<br>Adicione sua primeira meta acima!</p></div>`;
+      return;
+    }
+    const porSemana = {};
+    state.metas.forEach(m => {
+      if (!porSemana[m.semana]) porSemana[m.semana] = [];
+      porSemana[m.semana].push(m);
+    });
+    let html = '';
+    [1,2,3,4].forEach(s => {
+      if (!porSemana[s]) return;
+      html += `<div class="semana-header">Semana ${s}</div>`;
+      porSemana[s].forEach(m => {
+        const info = pilarInfo[m.pilar];
+        html += `<div class="meta-item">
+          <span class="meta-icon">${info.icon}</span>
+          <div class="meta-info">
+            <div class="meta-titulo">${m.titulo}</div>
+            ${m.medida ? `<div class="meta-detalhe">📏 ${m.medida}</div>` : ''}
+          </div>
+          <span class="meta-badge ${info.badge}">${info.label}</span>
+          <button class="btn btn-danger btn-sm" onclick="removerMeta(${m.id})">✕</button>
+        </div>`;
+      });
+    });
+    el.innerHTML = html;
+  }
+
+  // ========= CHECKLIST =========
+  function renderChecklist() {
+    const allItems = [...state.checksDefault, ...state.metas.map(m => ({
+      id: 'meta_' + m.id, semana: m.semana, pilar: m.pilar, texto: m.titulo, isMeta: true
+    }))];
+
+    let html = '';
+    [1,2,3,4].forEach(s => {
+      const items = allItems.filter(c => c.semana === s);
+      if (!items.length) return;
+      html += `<div class="semana-header">📅 Semana ${s}</div>`;
+      items.forEach(item => {
+        const done = !!state.checks[item.id];
+        const info = pilarInfo[item.pilar] || { icon: '📌', label: item.pilar };
+        html += `<div class="check-item ${done ? 'done' : ''}" onclick="toggleCheck('${item.id}')" id="check-${item.id}">
+          <div class="check-box">${done ? '✓' : ''}</div>
+          <span class="check-texto">${item.texto}${item.isMeta ? ' <em style="font-size:0.78rem;opacity:0.6;">(sua meta)</em>' : ''}</span>
+          <span class="check-pilar">${info.icon} ${info.label}</span>
+        </div>`;
+      });
+    });
+    document.getElementById('checklist-container').innerHTML = html || `<div class="empty"><div class="empty-icon">📋</div><p>Adicione metas para ver o checklist personalizado!</p></div>`;
+    updateCheckProgress();
+  }
+
+  function toggleCheck(id) {
+    state.checks[id] = !state.checks[id];
+    save();
+    const el = document.getElementById('check-' + id);
+    if (el) {
+      el.classList.toggle('done', state.checks[id]);
+      el.querySelector('.check-box').textContent = state.checks[id] ? '✓' : '';
+    }
+    updateCheckProgress();
+    updateStats();
+    if (state.checks[id]) toast('✅ Tarefa concluída!');
+  }
+
+  function updateCheckProgress() {
+    const all = [...state.checksDefault, ...state.metas.map(m => ({ id: 'meta_' + m.id }))];
+    const total = all.length;
+    const done = all.filter(c => state.checks[c.id]).length;
+    const pct = total ? Math.round((done / total) * 100) : 0;
+    const bar = document.getElementById('prog-bar-check');
+    const lbl = document.getElementById('pct-label-check');
+    if (bar) bar.style.width = pct + '%';
+    if (lbl) lbl.textContent = pct + '%';
+  }
+
+  // ========= PROGRESSO =========
+  function renderProgresso() {
+    const allItems = [...state.checksDefault, ...state.metas.map(m => ({
+      id: 'meta_' + m.id, semana: m.semana, pilar: m.pilar
+    }))];
+
+    // Por pilar
+    ['saude','estudos','financas'].forEach(p => {
+      const items = allItems.filter(c => c.pilar === p);
+      const done = items.filter(c => state.checks[c.id]).length;
+      const pct = items.length ? Math.round((done / items.length) * 100) : 0;
+      const el = document.getElementById('pct-' + p);
+      if (el) el.textContent = items.length ? pct + '%' : '—';
+    });
+
+    // Diagnóstico
+    const d = state.diagnostico;
+    const hasDiag = Object.keys(d).length > 1;
+    const cardDiag = document.getElementById('card-diagnostico-resumo');
+    if (hasDiag && cardDiag) {
+      cardDiag.style.display = 'block';
+      const areas = [
+        { label: 'Sono', key: 'sono', pilar: 'saude' },
+        { label: 'Exercício', key: 'exercicio', pilar: 'saude' },
+        { label: 'Alimentação', key: 'alimentacao', pilar: 'saude' },
+        { label: 'Rotina de estudos', key: 'rotina', pilar: 'estudos' },
+        { label: 'Foco', key: 'foco', pilar: 'estudos' },
+        { label: 'Organização', key: 'organizacao', pilar: 'estudos' },
+        { label: 'Controle de gastos', key: 'gastos', pilar: 'financas' },
+        { label: 'Poupar', key: 'poupança', pilar: 'financas' },
+        { label: 'Planejamento financeiro', key: 'planejamento', pilar: 'financas' },
+      ];
+      const colors = { saude: '#E76F51', estudos: '#457B9D', financas: '#2D6A4F' };
+      let html = '';
+      areas.forEach(a => {
+        const val = d[a.key] ?? 5;
+        const pct = val * 10;
+        html += `<div class="progress-wrap">
+          <div class="progress-label"><span>${a.label}</span><span>${val}/10</span></div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%;background:${colors[a.pilar]}"></div></div>
+        </div>`;
+      });
+      if (d.obs) html += `<div style="margin-top:0.8rem;padding:0.8rem;background:var(--verde-pale);border-radius:10px;font-size:0.88rem;color:var(--verde);"><strong>Foco principal:</strong> ${d.obs}</div>`;
+      document.getElementById('diagnostico-resumo-content').innerHTML = html;
+    }
+
+    // Semanas
+    let semHtml = '';
+    [1,2,3,4].forEach(s => {
+      const items = allItems.filter(c => c.semana === s);
+      const done = items.filter(c => state.checks[c.id]).length;
+      const pct = items.length ? Math.round((done / items.length) * 100) : 0;
+      semHtml += `<div class="progress-wrap">
+        <div class="progress-label"><span>Semana ${s}</span><span>${done}/${items.length} tarefas</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    });
+    document.getElementById('progresso-semanas').innerHTML = semHtml;
+
+    // Metas
+    let metHtml = '';
+    if (!state.metas.length) {
+      metHtml = `<div class="empty" style="padding:1.5rem;"><p>Nenhuma meta criada ainda.</p></div>`;
+    } else {
+      state.metas.forEach(m => {
+        const done = !!state.checks['meta_' + m.id];
+        const info = pilarInfo[m.pilar];
+        metHtml += `<div class="meta-item">
+          <span class="meta-icon">${done ? '✅' : info.icon}</span>
+          <div class="meta-info">
+            <div class="meta-titulo" style="${done ? 'text-decoration:line-through;opacity:0.6;' : ''}">${m.titulo}</div>
+            <div class="meta-detalhe">Semana ${m.semana} · ${info.label}</div>
+          </div>
+          <span class="meta-badge ${info.badge}">${done ? 'Concluída' : 'Em andamento'}</span>
+        </div>`;
+      });
+    }
+    document.getElementById('resumo-metas').innerHTML = metHtml;
+  }
+
+  // ========= STATS HOME =========
+  function updateStats() {
+    document.getElementById('stat-metas').textContent = state.metas.length;
+    const allChecks = [...state.checksDefault, ...state.metas.map(m => ({ id: 'meta_' + m.id }))];
+    const done = allChecks.filter(c => state.checks[c.id]).length;
+    document.getElementById('stat-checks').textContent = done;
+    const pct = allChecks.length ? Math.round((done / allChecks.length) * 100) : 0;
+    document.getElementById('stat-pct').textContent = pct + '%';
+  }
+
+  // ========= INIT =========
+  renderMetas();
+  updateStats();
+</script>
+</body>
+</html>
